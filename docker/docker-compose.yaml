@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  funnel:
+    image: funnel
+    environment:
+      POSTGRES_DB_NAME: postgres
+      POSTGRES_USER: postgres  # Use the correct PostgreSQL username
+      POSTGRES_PASSWORD: postgres  # Use the correct PostgreSQL password
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    build:
+      context: ../
+      dockerfile: docker/funnel/Dockerfile    
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+  postgres:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"  # Map the container's 5432 to the host's 5432
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@domain.com
+      PGADMIN_DEFAULT_PASSWORD: dev
+    ports:
+      - "81:80"
+
