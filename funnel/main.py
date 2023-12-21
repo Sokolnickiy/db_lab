@@ -13,13 +13,15 @@ if __name__ == "__main__":
         password=os.environ["POSTGRES_PASSWORD"],
         user=os.environ["POSTGRES_USER"]
     ) 
-    logger.debug("db_writer initialized")
+    logger.debug("DbWriter initialized")
     csv_parser = CsvParser()
     csv_parser.parse_to_dict()
+    logger.debug("Finished parsing csv")
     for row in csv_parser.df.iloc[1:].values.tolist():
         db_writer.execute(
             query=insert_query,
             values=row
         )
+    logger.debug("Finished inserting data into postgres")
 
     

@@ -2,7 +2,6 @@ import psycopg2
 from singleton import Singleton
 from psycopg2.extensions import connection
 from loguru import logger
-from typing import Any
 
 
 class DbWriter(Singleton):
