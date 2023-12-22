@@ -2,11 +2,11 @@ FROM python:3.10
 
 WORKDIR /app
 
-COPY requirements.txt /app/
+COPY ./service-worker/requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app/
+COPY ./service-worker /app/
 
 ENTRYPOINT ["python", "main.py"]
 

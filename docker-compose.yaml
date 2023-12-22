@@ -10,15 +10,13 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
     build:
-      context: ../
+      context: ./
       dockerfile: docker/funnel/Dockerfile    
     depends_on:
       - postgres
-    ports:
-      - "8080:8080"
   postgres:
     build:
-      context: ./postgres
+      context: ./docker/postgres
       dockerfile: Dockerfile
     environment:
       POSTGRES_DB: postgres
@@ -26,6 +24,34 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"  # Map the container's 5432 to the host's 5432
+  alembic:
+    build:
+      context:  ./
+      dockerfile: docker/alembic/Dockerfile
+    environment:
+      POSTGRES_DB_NAME: dev
+      POSTGRES_USER: postgres  
+      POSTGRES_PASSWORD: postgres  
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on:
+      - postgres
+    command: ["alembic", "upgrade", "head"]
+  worker:
+    image: worker
+    environment:
+      POSTGRES_DB_NAME: postgres
+      POSTGRES_FINAL_DB_NAME: dev
+      POSTGRES_USER: postgres  
+      POSTGRES_PASSWORD: postgres  
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    build:
+      context: ./
+      dockerfile: docker/worker/Dockerfile    
+    depends_on:
+      - postgres
+      - alembic
   pgadmin:
     image: dpage/pgadmin4
     depends_on:

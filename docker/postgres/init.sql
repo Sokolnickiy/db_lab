@@ -127,3 +127,5 @@ CREATE TABLE god_table (
     spaPTAreaName VARCHAR(255),
     spaPTTerName VARCHAR(255)
 );
+
+CREATE DATABASE dev;
